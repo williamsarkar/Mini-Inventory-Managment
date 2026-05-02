@@ -1,0 +1,235 @@
+<!-- ============= start navbar ============= -->
+<%- include('partials/navbar'); %> 
+<!-- ============= end navbar ============= -->
+
+   <!-- ================================= Start Product Image Viwer Modal ================================= -->
+
+    <%- include('partials/modals/img-modal/img-viewer-modal.ejs'); %> 
+
+    <!-- ================================= Exit Product Image Viwer Modal ================================= -->
+
+    <div class="container">
+      <!-- ============================= Start Search Bar ========================== -->
+
+      <nav class="navbar navbar-light bg-light my-3">
+        <div class="container-fluid justify-content-between">
+          <h1 class="text-capitalize">Sale Item</h1>
+          <form class="d-flex">
+            <input
+              id="searchProductName"
+              class="form-control me-2"
+              type="search"
+              placeholder="Product Name"
+              aria-label="Search"
+              name="searchProductName"
+              onkeyup="searchAction()"
+            />
+            <button
+              id="search-btn"
+              class="btn btn-outline-primary"
+              type="submit"
+            >
+              Search
+            </button>
+          </form>
+        </div>
+      </nav>
+
+      <!-- ============================= End Search Bar ========================== -->
+
+      <!-- =============================== Start Customer Details Cart Viewer ======================== -->
+
+      <div
+        class="offcanvas offcanvas-end"
+        tabindex="-1"
+        id="customer-details-carts"
+        aria-labelledby="offcanvasRightLabel"
+      >
+        <div class="offcanvas-header">
+          <h5 id="offcanvasRightLabel">Customer Details</h5>
+          <button
+            type="button"
+            class="btn-close text-reset"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="offcanvas-body">
+          <!-- ======================= start customer details form ========================== -->
+
+          <form id="customer_form" class="mb-3">
+            <label>Customer Name</label>
+            <input
+              type="text"
+              class="form-control my-2"
+              placeholder="Customer Name"
+              name="customer_name"
+            />
+            <p class="error customer_name_error"></p>
+            <label>Customer Address</label>
+            <input
+              type="text"
+              class="form-control my-2"
+              placeholder="Customer Address"
+              name="customer_address"
+            />
+            <p class="error customer_address_error"></p>
+            <label>Customer Number</label>
+            <input
+              type="text"
+              class="form-control my-2"
+              placeholder="+88017XXXXXXXX"
+              name="customer_number"
+            />
+            <p class="error common_error"></p>
+          </form>
+
+          <!-- ======================= end customer details form ========================== -->
+
+          <div class="d-flex justify-content-between">
+            <button
+              type="button"
+              class="btn btn-primary"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#product-cart"
+              aria-controls="offcanvasRight"
+            >
+              Back
+            </button>
+            <button id="invoice-download-btn" type="button" class="btn btn-primary" onclick="download_invoice()">
+              Download Invoice
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- =============================== end Customer Details Cart Viewer ======================== -->
+
+      <!-- ================================ Start Cart View for show selected product ============================ -->
+
+      <div class="cart-view d-flex justify-content-end">
+        <div
+          class="offcanvas offcanvas-end"
+          tabindex="-1"
+          id="product-cart"
+          aria-labelledby="offcanvasRightLabel"
+        >
+          <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">Selected Product Cart</h5>
+            <button
+              type="button"
+              class="btn-close text-reset"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <!-- ==================== Start Selected Product Table ========================== -->
+
+          <table class="table">
+            <thead>
+
+                <tr>
+                  <th scope="col">Product</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+
+          <!-- ==================== End Selected Product Table ========================== -->
+          
+          <div class="offcanvas-body">
+            <div class="d-flex justify-content-end">
+              <button
+                id="cart-next-btn "
+                type="button"
+                class="btn btn-primary"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#customer-details-carts"
+                aria-controls="offcanvasRight"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          aria-controls="offcanvasRight"
+          onclick="showSeletedProductsCart()"
+        >
+          Show Cart
+        </button>
+      </div>
+
+      <!-- ================================ End Cart View for show selected product ============================ -->
+
+      <!-- ============================== Start Product table ================================== -->
+
+      <div class="table-container">
+        <table id="all-products-table" class="table table-striped my-2">
+          <thead>
+            <tr>
+              <th scope="col">Picture</th>
+              <th scope="col">Product Name</th>
+              <th scope="col">Brand</th>
+              <th scope="col">Description</th>
+              <th scope="col">Price</th>
+              <th scope="col">Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(product=>{ %>
+            <tr id="<%= product._id %>">
+              <td class="td-img">
+                <% if(product.productImg){ %> 
+                  <img
+                  src="./uploads/product-imgs/<%= product.productImg %>"
+                  class="img-thumbnail img-fluid product-img"
+                  alt="Product Image"
+                  onclick="showProductImgModal('./uploads/product-imgs/<%= product.productImg %>')"
+                />
+                <% }else{ %> 
+                  <img
+                    data-bs-toggle="modal"
+                    data-bs-target="#product-img-viewer-modal"
+                    src="./images/no-pic.png"
+                    class="img-thumbnail img-fluid product-img"
+                    alt="No Product Image"
+                  />
+                <% } %> 
+              </td>
+              <td><%= product.productName %></td>
+              <td><%= product.brandName %></td>
+              <% if(product.description) {%>
+                <td class="td-descrip"><%= product.description %></td>
+                <%} else { %>
+                  <td class="td-descrip">No Description</td>
+                  <% } %>
+              <td><%= product.price %>TK</td>
+              <td class="text-center td-product-quantity">
+                <input type="number" name="product_quantity" class="px-1" value="0"
+                onchange="productQuantityInputChange('<%= product._id %>', this.value)"
+                />
+                <p class="error error_product_quantity">
+                  Invalid Product Quantity
+                </p>
+              </td>
+            </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <!-- ============================== End Product table ================================== -->
+    </div>
+
+    <!-- JavaScript File sale item  -->
+    <script defer src="./js/sale_item.js"></script>
+  </body>
+</html>

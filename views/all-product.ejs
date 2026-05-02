@@ -1,0 +1,126 @@
+    <!-- ======================== Start Nav Bar =========================== -->
+   <%- include('partials/navbar.ejs'); %>
+    <!-- ======================== Exit Start Nav Bar =========================== -->
+
+    <!-- ====================Start Add product Modal Dialuge ===================================== -->
+    <%- include('partials/modals/add-edit-modals/add-product-modal'); %>
+    <!-- ==============Exit Add product Modal Dialuge =============================== -->
+    
+    <!-- ====================Start Edit Item Modal Dialuge ===================================== -->
+    <%- include('partials/modals/add-edit-modals/edit-product-modal'); %>
+    <!-- ==============Exit Edit product Modal Dialuge =============================== -->
+
+    <!-- ================================= Start Product Image Viewer Modal ================================= -->
+
+    <%- include('partials/modals/img-modal/img-viewer-modal'); %> 
+
+    <!-- ================================= Exit Product Image Viewer Modal ================================= -->
+
+    <!-- ========================= start add button ====================== -->
+    <div
+      class="container d-flex justify-content-center flex-column align-items-center"
+    >
+      <button type="button" class="btn addItem-btn my-4">
+        <i
+          class="fa-solid fa-circle-plus fa-2xl"
+          data-bs-toggle="modal"
+          data-bs-target="#add-product-modal"
+        ></i>
+      </button>
+      <div class="showItemContainer">
+        <!-- ========================= End add button ====================== -->
+
+        <!-- ================================= start search bar ============================= -->
+        <nav class="navbar navbar-light bg-light my-4">
+          <div class="container-fluid justify-content-between">
+            <h1 class="text-capitalize">All Product</h1>
+            <form class="d-flex">
+              <input
+                id="searchProductName"
+                class="form-control me-2"
+                type="search"
+                placeholder="Product Name"
+                aria-label="Search"
+                name="searchProductName"
+                onkeyup="searchAction()"
+              />
+              <button
+                id="search-btn"
+                class="btn btn-outline-primary"
+                type="submit"
+              >
+                Search
+              </button>
+            </form>
+          </div>
+        </nav>
+
+        <!-- ================================= Exit search bar ============================= -->
+
+        <!-- ============================== Start Product table ================================== -->
+
+        <div class="table-container">
+          <table id="all-products-table" class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Picture</th>
+                <th scope="col">Product Name</th>
+                <th scope="col">Brand</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col"></th>
+              </tr>
+            </thead>
+            <tbody>
+            <% if(products) {
+              products.forEach((product) => {
+              %> 
+              <tr id="#<%= product._id %>">
+                <td class="td-img">
+                  <% if(product.productImg) {%> 
+                  <img
+                    src="./uploads/product-imgs/<%= product.productImg %>"
+                    class="img-thumbnail img-fluid product-img"
+                    alt="Product Image"
+                    onclick="showProductImgModal('./uploads/product-imgs/<%= product.productImg %>')"
+                  />
+                  <% } else { %>
+                    <img
+                    data-bs-toggle="modal"
+                    data-bs-target="#product-img-viewer-modal"
+                    src="./images/no-pic.png"
+                    class="img-thumbnail img-fluid product-img"
+                    alt="No Product Image"
+                  />
+                    <% } %> 
+                </td>
+                <td><%= product.productName %></td>
+                <td><%= product.brandName %></td>
+                <% if(product.description) {%>
+                <td class="td-descrip"><%= product.description %></td>
+                <%} else { %>
+                  <td class="td-descrip">No Description</td>
+                  <% } %>
+                <td><%= product.price %>TK</td>
+                <td class="text-center edit-item">
+                  <i
+                    class="fa-solid fa-pen-to-square fa-2xl btn-update"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit-product"
+                  ></i>
+                  <i class="fa-solid fa-trash fa-2xl btn-delete" ondblclick="removeProduct('<%= product._id %>')"></i>
+                </td>
+              </tr>
+              <% })} %> 
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ============================== End Product table ================================== -->
+      </div>
+    </div>
+
+    <script src="./js/all_product.js" defer></script>
+
+  </body>
+</html>
